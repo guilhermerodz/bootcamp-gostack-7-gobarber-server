@@ -17,7 +17,7 @@ class AppointmentController {
     const appointments = await Appointment.findAll({
       where: { user_id: req.userId, canceled_at: null },
       order: ['date'],
-      attributes: ['id', 'date'],
+      attributes: ['id', 'date', 'past', 'cancelable'],
       limit: perPage,
       offset: (page - 1) * perPage,
       include: [
@@ -142,9 +142,7 @@ class AppointmentController {
         error: 'This appointment is already canceled',
       });
 
-    const subtractedDate = subHours(appointment.date, 2);
-
-    if (isBefore(subtractedDate, new Date()))
+    if (!appointment.cancelable)
       return res.status(401).json({
         error: 'You can only cancel appointments 2 hours in advance',
       });
