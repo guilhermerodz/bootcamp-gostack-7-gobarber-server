@@ -1,11 +1,13 @@
 import Redis from 'ioredis';
 
+const keyPrefix = 'cache:';
+
 class Cache {
   constructor() {
     this.redis = new Redis({
       host: process.env.REDIS_HOST,
       port: process.env.REDIS_PORT,
-      keyPrefix: 'cache:',
+      keyPrefix,
     });
   }
 
@@ -21,6 +23,14 @@ class Cache {
 
   invalidate(key) {
     return this.redis.del(key);
+  }
+
+  async invalidatePrefix(prefix) {
+    const keys = await this.redis.keys(`${keyPrefix}${prefix}:*`);
+
+    const keysWithoutPrefix = keys.map(key => key.replace(keyPrefix, ''));
+
+    return this.redis.del(keysWithoutPrefix);
   }
 }
 

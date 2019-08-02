@@ -6,6 +6,8 @@ import Appointment from '../models/Appointment';
 
 import Notification from '../schemas/Notification';
 
+import Cache from '../../lib/Cache';
+
 class CreateAppointmentService {
   async run({ provider_id, user_id, date }) {
     /**
@@ -64,7 +66,12 @@ class CreateAppointmentService {
       date,
     });
 
-    /** ;
+    /**
+     * Invalidate Cache
+     */
+    await Cache.invalidatePrefix(`user:${user_id}:appointments`);
+
+    /**
      * Notify appointment provider
      */
     const user = await User.findByPk(user_id);

@@ -5,13 +5,22 @@ import Appointment from '../models/Appointment';
 import CreateAppointmentService from '../services/CreateAppointmentService';
 import CancelAppointmentService from '../services/CancelAppointmentService';
 
+import Cache from '../../lib/Cache';
+
 class AppointmentController {
   async index(req, res) {
+    const user_id = req.userId;
+
     const { page = 1 } = req.query;
     const perPage = 20;
 
+    const cacheKey = `user:${user_id}:appointments:${page}`;
+    const cached = await Cache.get(cacheKey);
+
+    if (cached) return res.json(cached);
+
     const appointments = await Appointment.findAll({
-      where: { user_id: req.userId, canceled_at: null },
+      where: { user_id, canceled_at: null },
       order: ['date'],
       attributes: ['id', 'date', 'past', 'cancelable'],
       limit: perPage,
@@ -31,6 +40,8 @@ class AppointmentController {
         },
       ],
     });
+
+    await Cache.set(cacheKey, appointments);
 
     return res.json(appointments);
   }

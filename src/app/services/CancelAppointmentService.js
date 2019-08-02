@@ -7,6 +7,8 @@ import CancellationMail from '../jobs/CancellationMail';
 
 import Error from '../../error';
 
+import Cache from '../../lib/Cache';
+
 class CancelAppointmentService {
   async run({ provider_id, user_id }) {
     const appointment = await Appointment.findByPk(provider_id, {
@@ -45,6 +47,11 @@ class CancelAppointmentService {
     appointment.canceled_at = new Date();
 
     await appointment.save();
+
+    /**
+     * Invalidate Cache
+     */
+    await Cache.invalidatePrefix(`user:${user_id}:appointments`);
 
     await Queue.add(CancellationMail.key, {
       appointment,
