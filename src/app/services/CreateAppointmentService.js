@@ -15,12 +15,17 @@ class CreateAppointmentService {
       where: { id: provider_id, provider: true },
     });
 
-    if (!checkIsProvider) {
-      throw new Error('You can only create appointments with providers');
-    }
+    if (!checkIsProvider)
+      throw new Error({
+        status: 400,
+        message: 'You can only create appointments with providers',
+      });
 
     if (user_id === provider_id)
-      throw new Error("You can't create appointments with yourself");
+      throw new Error({
+        status: 400,
+        message: "You can't create appointments with yourself",
+      });
 
     /**
      * Check for past dates
@@ -28,7 +33,10 @@ class CreateAppointmentService {
     const hourStart = startOfHour(parseISO(date));
 
     if (isBefore(hourStart, new Date()))
-      throw new Error('Past dates are not allowed');
+      throw new Error({
+        status: 400,
+        message: 'Past dates are not allowed',
+      });
 
     /**
      * Check if date is unavailable
@@ -42,7 +50,10 @@ class CreateAppointmentService {
     });
 
     if (checkDateIsUnavailable)
-      throw new Error('Appointment date is unavailable');
+      throw new Error({
+        status: 400,
+        message: 'Appointment date is unavailable',
+      });
 
     /**
      * Finally creates appointment

@@ -51,6 +51,11 @@ class App {
         return res.status(500).json(errors);
       }
 
+      const { status, message } = err;
+
+      if (status && status !== 500)
+        return res.status(status).json({ error: message });
+
       return res.status(500).json({ error: 'Internal server error' });
     });
   }
