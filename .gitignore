@@ -1,5 +1,7 @@
 node_modules/
+__tests__/coverage
 .env
+.env.test
 
 # Excludes all uploaded files
 tmp/uploads/*
