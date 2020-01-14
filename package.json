@@ -9,6 +9,7 @@
     "pretest": "env $(cat .env.test) docker-compose -f docker-compose.test.yml -p rocketseat-gobarber-server-test up -d && NODE_ENV=test sequelize db:migrate",
     "test": "NODE_ENV=test jest --forceExit",
     "posttest": "NODE_ENV=test sequelize db:migrate:undo:all && env $(cat .env.test) docker-compose -f docker-compose.test.yml -p rocketseat-gobarber-server-test down",
+    "securetest": "SECURE=true test",
     "queue": "nodemon src/queue.js"
   },
   "dependencies": {
@@ -36,7 +37,9 @@
   },
   "devDependencies": {
     "@sucrase/jest-plugin": "^2.0.0",
+    "@types/ioredis": "^4.14.3",
     "@types/jest": "^24.0.25",
+    "@types/mongoose": "^5.5.41",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-config-prettier": "^6.0.0",

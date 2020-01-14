@@ -5,40 +5,41 @@ import factory from '../factory';
 import truncate from '../util/truncate';
 import app from '../../src/app';
 
-describe('User', () => {
-  beforeEach(truncate);
+export default () =>
+  describe('User', () => {
+    beforeEach(truncate);
 
-  it('should encrypt user password during register', async () => {
-    const user = await factory.create('User', {
-      password: '123456',
+    it('should encrypt user password during register', async () => {
+      const user = await factory.create('User', {
+        password: '123456',
+      });
+
+      const compareHash = await bcrypt.compare('123456', user.password_hash);
+
+      expect(compareHash).toBe(true);
     });
 
-    const compareHash = await bcrypt.compare('123456', user.password_hash);
+    it('should be able to register', async () => {
+      const user = await factory.attrs('User');
 
-    expect(compareHash).toBe(true);
+      const response = await request(app)
+        .post('/users')
+        .send(user);
+
+      expect(response.body).toHaveProperty('id');
+    });
+
+    it('should not be able to register duplicated emails', async () => {
+      const user = await factory.attrs('User');
+
+      await request(app)
+        .post('/users')
+        .send(user);
+
+      const response = await request(app)
+        .post('/users')
+        .send(user);
+
+      expect(response.status).toBe(400);
+    });
   });
-
-  it('should be able to register', async () => {
-    const user = await factory.attrs('User');
-
-    const response = await request(app)
-      .post('/users')
-      .send(user);
-
-    expect(response.body).toHaveProperty('id');
-  });
-
-  it('should not be able to register duplicated emails', async () => {
-    const user = await factory.attrs('User');
-
-    await request(app)
-      .post('/users')
-      .send(user);
-
-    const response = await request(app)
-      .post('/users')
-      .send(user);
-
-    expect(response.status).toBe(400);
-  });
-});

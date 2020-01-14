@@ -6,6 +6,8 @@ import Appointment from '../models/Appointment';
 
 import Notification from '../schemas/Notification';
 
+import Error from '../../error';
+
 import Cache from '../../lib/Cache';
 
 class CreateAppointmentService {
