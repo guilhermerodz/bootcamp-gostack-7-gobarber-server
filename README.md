@@ -30,10 +30,12 @@ I've used other libraries too, like **multer** for file uploads; **youch** and *
 
 ## Getting started
 
-First you need to have `node` or `yarn` installed on your machine.  
-You'll also need `docker compose`.  
+First you need to have `node` or `yarn` installed on your machine.
+You'll also need `docker compose`.
 Then, you can clone this repository and run the following commands inside the project folder:
 
-1. `docker-compose up`;
+1. `yarn dev`;
 
-_Obs: don't forget to create the `.env` (please duplicate `.env.example`).
+\_Obs: don't forget to create the `.env` (please duplicate `.env.example`).
+
+You can even run `yarn test` after created `.env.test`!
