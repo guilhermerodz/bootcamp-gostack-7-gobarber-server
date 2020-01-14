@@ -4,11 +4,12 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon src/server.js",
-    "queue": "nodemon src/queue.js",
+    "dev": "env $(cat .env) docker-compose up",
+    "start": "nodemon src/server.js",
     "pretest": "env $(cat .env.test) docker-compose -f docker-compose.test.yml -p rocketseat-gobarber-server-test up -d && NODE_ENV=test sequelize db:migrate",
     "test": "NODE_ENV=test jest --forceExit",
-    "posttest": "NODE_ENV=test sequelize db:migrate:undo:all && docker-compose -f docker-compose.test.yml -p rocketseat-gobarber-server-test down"
+    "posttest": "NODE_ENV=test sequelize db:migrate:undo:all && env $(cat .env.test) docker-compose -f docker-compose.test.yml -p rocketseat-gobarber-server-test down",
+    "queue": "nodemon src/queue.js"
   },
   "dependencies": {
     "@sentry/node": "5.4.3",

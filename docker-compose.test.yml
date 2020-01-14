@@ -4,7 +4,7 @@ services:
   postgres:
     image: postgres:alpine
     ports:
-      - "5432:5432"
+      - "${DB_PORT}:5432"
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASS=${DB_PASS}
@@ -15,12 +15,12 @@ services:
   redis:
     image: redis:alpine
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT}:6379"
 
   mongo:
     image: mongo
     ports:
-      - "27017:27017"
+      - "${MONGO_PORT}:27017"
 
 volumes:
   postgres_data:

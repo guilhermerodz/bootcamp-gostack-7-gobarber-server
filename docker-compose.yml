@@ -4,29 +4,35 @@ services:
   postgres:
     image: postgres:alpine
     ports:
-      - "5432:5432"
+      - "${DB_PORT}:5432"
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASS=${DB_PASS}
       - POSTGRES_DB=${DB_NAME}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    logging:
+      driver: none
 
   redis:
     image: redis:alpine
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT}:6379"
+    logging:
+      driver: none
 
   mongo:
     image: mongo
     ports:
-      - "27017:27017"
+      - "${MONGO_PORT}:27017"
+    logging:
+      driver: none
 
   app:
     build: .
     ports:
       - '3333:3333'
-    command: yarn dev
+    command: yarn start
     depends_on:
       - postgres
     volumes:

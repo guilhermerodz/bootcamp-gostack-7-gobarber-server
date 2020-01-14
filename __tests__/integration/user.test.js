@@ -4,8 +4,6 @@ import bcrypt from 'bcryptjs';
 import factory from '../factory';
 import truncate from '../util/truncate';
 import app from '../../src/app';
-import database from '../../src/database';
-import cache from '../../src/lib/Cache';
 
 describe('User', () => {
   beforeEach(truncate);
